@@ -1,0 +1,21 @@
+data:
+  names: 'dataset/abc_watertight_train.txt'
+  hdf5: '/data/nmaruani/DATASETS/gt_Quadrics/'
+  grid_n: 33
+  mask_close: True
+training: 
+  input: 'model_multiple_quadrics_split.pt'
+  model_name: 'model_multiple_quadrics_split_fine.pt'
+  batch_size: 16
+  lr: 0.000032
+  wd: 0.01
+  beta1: 0.9
+  beta2: 0.999
+  amsgrad: True
+  epochs: 195
+  sample_fac: 700000
+  K: 4
+  losses_weights: [100, 100, .1, .1, .1]
+  supervised: False
+  multiple: True
+  me: False
