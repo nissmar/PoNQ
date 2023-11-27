@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.spatial import Delaunay
 import torch
-from mesh_tools import tet_circumcenter, SIGNS
+from utils.mesh_tools import tet_circumcenter, SIGNS
 import networkx as nx
 
 
@@ -15,9 +15,9 @@ def face_orientation(p1, p2, p3, vp1):
     return (np.cross(p2 - p1, p3 - p1) * (vp1 - (p1+p2+p3)/3.)).sum() > 0
 
 
-class SurfaceFromQuadrics(Delaunay):
+class MeshFromPoNQ(Delaunay):
     '''Mesh from PoNQ'''
-    def __init__(self, vstars: torch.tensor, eigs: torch.tensor, quadrics: torch.tensor, normals: torch.tensor, add_corners=True, compute_mincut=True, rvd_tresh=-1, grid_scale=32, correct_tet_color=True, **kwargs) -> None:
+    def __init__(self, vstars: torch.tensor, eigs: torch.tensor, quadrics: torch.tensor, normals: torch.tensor, add_corners=True, compute_mincut=True, grid_scale=32, correct_tet_color=True, **kwargs) -> None:
         self.add_corners = add_corners
         if self.add_corners:
             vstars = torch.cat(
@@ -42,29 +42,24 @@ class SurfaceFromQuadrics(Delaunay):
             1).cpu().detach().numpy()
         self.triangle_areas = np.sqrt((np.cross(
             self.points[self.triangle_faces[:, 1]] - self.points[self.triangle_faces[:, 0]], self.points[self.triangle_faces[:, 2]] - self.points[self.triangle_faces[:, 0]])**2).sum(-1))
-        self.tet_colors = self.get_init_tet_color()
+        self.tet_colors = self.get_init_tet_color() # circumcenter criterion
         if correct_tet_color:
-            self.correct_tet_color()
-        self.add_void_vertices()
+            self.correct_tet_color() # barycenter criterion
+        self.add_void_vertices() # add small tets around unmarked vertices
         self.final_scores = self.get_faces_score(
             self.triangle_faces)*grid_scale**2 + (self.get_face_normal_align()/1.5)**2
         if compute_mincut:
-            self.min_cut()
+            self.min_cut() # min cut surface
 
     def get_triangle_faces(self):
         opp_face = [[1, 2, 3], [0, 2, 3], [0, 1, 3], [0, 1, 2]]
         ii = np.arange(len(self.neighbors))
         triangle_faces = -np.ones((len(self.neighbors)*4, 3), dtype=int)
-
         for j in range(4):
             triangle_faces[4*ii + j] = self.simplices[:, opp_face[j]]
         triangle_faces_neighbors = np.column_stack((np.arange(
             len(self.neighbors)).repeat(4), self.neighbors.reshape(len(self.neighbors)*4)))
-
         return triangle_faces, triangle_faces_neighbors
-
-    def outside_tet_mask(self):
-        return (self.simplices >= len(self.points)-8).any(-1)
 
     def face_orientation(self, p1, p2, p3, vp1):
         return (np.cross(p2 - p1, p3 - p1) * (vp1 - (p1+p2+p3)/3.)).sum(-1) > 0
@@ -74,7 +69,6 @@ class SurfaceFromQuadrics(Delaunay):
             len(self.simplices[self.triangle_faces_neighbors]))
         in_mask = self.face_orientation(
             *np.transpose(self.points[self.triangle_faces], (1, 0, 2)), self.points[opp_vert])
-
         in_triangle = self.triangle_faces
         flipped_triangles = np.fliplr(in_triangle)
         self.triangle_faces = in_triangle * \

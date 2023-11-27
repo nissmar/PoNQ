@@ -8,13 +8,8 @@ import argparse
 import yaml
 from pytorch3d.ops import knn_points
 from time import time
-
-if True:
-    import sys
-    sys.path.insert(1, '../utils/')
-    sys.path.insert(1, 'utils/')
-    import mesh_tools as mt
-    import neural_quadrics as nq
+import utils.mesh_tools as mt
+from utils.PoNQ import PoNQ
 
 
 def initialize_model(n_points, device, input_pc=None, grid_n=0):
@@ -27,8 +22,7 @@ def initialize_model(n_points, device, input_pc=None, grid_n=0):
         points = np.asarray(pcd.farthest_point_down_sample(n_points).points)
     else:
         points = 2*np.random.rand(n_points, 3)-1.
-
-    return nq.MovingQuadrics(points, device)
+    return PoNQ(points, device)
 
 
 def train_simple(V, optimizer, tensor_surface, repulsion_fac=0, sample_fac=1):
