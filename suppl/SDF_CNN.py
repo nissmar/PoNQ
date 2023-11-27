@@ -4,7 +4,7 @@ if True:
     import sys
     sys.path.insert(1, '../utils/')
     import neural_quadrics as nq
-    import utils.mesh_tools as mt
+    import src.utils.mesh_tools as mt
 
 
 class resnet_block(nn.Module):

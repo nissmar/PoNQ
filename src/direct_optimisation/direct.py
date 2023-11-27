@@ -8,8 +8,8 @@ import argparse
 import yaml
 from pytorch3d.ops import knn_points
 from time import time
-import utils.mesh_tools as mt
-from utils.PoNQ import PoNQ
+import src.utils.mesh_tools as mt
+from src.utils.PoNQ import PoNQ
 
 
 def initialize_model(n_points, device, input_pc=None, grid_n=0):
