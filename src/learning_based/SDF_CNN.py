@@ -1,10 +1,7 @@
 import torch
 from torch import nn
-if True:
-    import sys
-    sys.path.insert(1, '../utils/')
-    import neural_quadrics as nq
-    import src.utils.mesh_tools as mt
+import src.utils.mesh_tools as mt
+from src.utils.PoNQ import QuadricBaseNN
 
 
 class resnet_block(nn.Module):
@@ -49,12 +46,13 @@ class SDF_decoder(nn.Module):
             x.shape[0], (self.grid_n-1)**3, self.K, self.out_features)/self.scale
 
 
-class CNN_3d_multiple_split(nq.QuadricBaseNN):
-    def __init__(self, grid_n=33, encoder_layers=5, decoder_layers=3, K=1, ef_dim=64):
+
+class CNN_3d_multiple_split(QuadricBaseNN):
+    def __init__(self, grid_n=33, encoder_layers=5, decoder_layers=3, K=4, ef_dim=128, device="cuda"):
         super().__init__()
         self.grid_n = grid_n
         self.grid = torch.tensor(mt.mesh_grid(
-            self.grid_n-1, True)*(grid_n-1)/grid_n, dtype=torch.float32).to("cuda")
+            self.grid_n-1, True)*(grid_n-1)/grid_n, dtype=torch.float32).to(device)
         self.ef_dim = ef_dim
         self.K = K  # number of points
         # convolutions
@@ -86,7 +84,7 @@ class CNN_3d_multiple_split(nq.QuadricBaseNN):
     def change_grid_size(self, grid_n):
         self.grid_n = grid_n
         self.grid = torch.tensor(mt.mesh_grid(
-            self.grid_n-1, True)*(grid_n-1)/grid_n, dtype=torch.float32).to("cuda")
+            self.grid_n-1, True)*(grid_n-1)/grid_n, dtype=torch.float32).to(self.grid.device)
         self.decoder_points.grid_n = grid_n
         self.decoder_points.scale = grid_n
         self.decoder_vstars.grid_n = grid_n

@@ -1,0 +1,20 @@
+path:
+  src_dir: '../data/thingy32/groundtruths/'
+  out_dir: '/data/nmaruani/RESULTS/Quadrics_direct/quadrics_thingi_no_rep_{}/'
+io:
+  normalize: 'NDC'
+  in_pointcloud: False
+  out_poisson: True
+  out_pt: True
+  out_rvd: False
+  out_min_cut: True
+  sample_n_base: 100000
+model:
+  n_points: None
+  init: None
+optim:
+  device: cuda
+  lr_base: .001
+  repulsion_fac: 0
+  sample_fac: .1
+  epochs: 400

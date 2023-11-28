@@ -1,17 +1,16 @@
 import torch
-from PoNQ import PoNQ
-device = 'cuda'
+from src.utils.PoNQ import PoNQ
 
 
 def sumpool(tens):
     return tens[..., ::2, ::2, ::2]+tens[..., 1::2, ::2, ::2]+tens[..., ::2, 1::2, ::2]+tens[..., ::2, ::2, 1::2]+tens[..., 1::2, ::2, 1::2]+tens[..., ::2, 1::2, 1::2]+tens[..., 1::2, 1::2, 1::2]+tens[..., 1::2, 1::2, ::2]
 
 
-def extract_PoNQ(M, sdfs, grid_n, mask, subd=0):
+def CNN_to_PoNQ(model, sdfs, grid_n, mask, subd=0, device="cuda"):
     # output PoNQ from network, subd=0: PoNQ subd=1: PoNQ-lite, subd>1: PoNQ-lite subdivided
     with torch.no_grad():
-        M.change_grid_size(grid_n)
-        _, predicted_vstars, predicted_mean_normals, predicted_quadrics, predicted_bool = M(
+        model.change_grid_size(grid_n)
+        _, predicted_vstars, predicted_mean_normals, predicted_quadrics, predicted_bool = model(
             sdfs.to(device)*(grid_n-1)/32)
         final_mask = (predicted_bool > .5)*mask.to(device)
         if subd == 0:
