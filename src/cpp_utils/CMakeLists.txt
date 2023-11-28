@@ -22,7 +22,7 @@ endif()
 include(CMakeDependentOption)
 
 # Find CGAL and CGAL Qt5
-find_package(CGAL 5.6...6 REQUIRED)
+find_package(CGAL)
 
 add_executable(self_intersect self_intersect.cpp)
 target_link_libraries(self_intersect PRIVATE CGAL::CGAL)

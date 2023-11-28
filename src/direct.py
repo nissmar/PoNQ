@@ -1,15 +1,17 @@
-import open3d as o3d
-from pytorch3d.loss import chamfer_distance
-from tqdm import tqdm
+import utils.mesh_tools as mt
+from utils.PoNQ import PoNQ
+import os
+import yaml
+from time import time
+import argparse
 import torch
 import numpy as np
-import os
-import argparse
-import yaml
+import open3d as o3d
+from tqdm import tqdm
 from pytorch3d.ops import knn_points
-from time import time
-import src.utils.mesh_tools as mt
-from src.utils.PoNQ import PoNQ
+from pytorch3d.loss import chamfer_distance
+
+
 
 
 def initialize_model(n_points, device, input_pc=None, grid_n=0):
@@ -95,7 +97,7 @@ if __name__ == '__main__':
         model_path = cfg['path']['src_dir'] + name
 
         input_points, input_normals = mt.load_shape(
-            model_path, cfg['io']['in_pointcloud'], cfg['io']['normalize'], cfg['io']['sample_n'])
+            model_path, cfg['io']['normalize'], cfg['io']['sample_n'])
 
         if cfg['model']['init'] == 'farthest' or not args.grid_n is None:
             input_pc = input_points

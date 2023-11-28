@@ -1,5 +1,5 @@
 import torch
-from src.utils.PoNQ import PoNQ
+from utils.PoNQ import PoNQ
 
 
 def sumpool(tens):

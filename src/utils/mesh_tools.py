@@ -5,7 +5,6 @@ import igl
 from sklearn.neighbors import KDTree
 from skimage import measure
 from scipy.spatial import Delaunay
-import open3d as o3d
 
 SIGNS = np.array(
     [
@@ -153,47 +152,18 @@ def mask_relevant_voxels(grid_n: int, samples: np.ndarray):
 # IO
 
 
-def load_shape(path, in_pointcloud=False, normalize='NDC', sample_n=None):
+def load_shape(path, normalize='NDC', sample_n=None):
     '''returns points+normals'''
-    if in_pointcloud:
-        pc = o3d.io.read_point_cloud(path)
-        input_points = np.asarray(pc.points)
-        if normalize == 'NDC':
-            input_points = 2*NDCnormalize(input_points)
-        input_normals = np.asarray(pc.normals)
-    else:  # mesh
-        v, f = igl.read_triangle_mesh(path)
-        if normalize == 'NDC':
-            v = 2*NDCnormalize(v)
-        ref_mesh = trimesh.Trimesh(v, f)
-        samples, face_index = trimesh.sample.sample_surface_even(
-            ref_mesh, sample_n)
-        input_points = np.array(samples)
-        input_normals = np.array(ref_mesh.face_normals[face_index])
+    # mesh
+    v, f = igl.read_triangle_mesh(path)
+    if normalize == 'NDC':
+        v = 2*NDCnormalize(v)
+    ref_mesh = trimesh.Trimesh(v, f)
+    samples, face_index = trimesh.sample.sample_surface_even(
+        ref_mesh, sample_n)
+    input_points = np.array(samples)
+    input_normals = np.array(ref_mesh.face_normals[face_index])
     return input_points, input_normals
-
-
-def load_shape_eval(path, in_pointcloud=False, normalize='NDC', sample_n=None):
-    '''returns points+normals'''
-    if in_pointcloud:
-        # load scan to extract scale
-        pc = o3d.io.read_point_cloud(path)
-        input_points = np.asarray(pc.points)
-        if normalize == 'NDC':
-            _, center, scale = NDCnormalize(input_points, return_scale=True)
-            scale /= 2
-        else:
-            center = np.zeros(3)
-            scale = 1
-        # load gt
-        gt_pc = o3d.io.read_point_cloud(path.replace(
-            'scans', 'ground_truth').replace('ply', 'xyz'))
-        points = matched_normalize(np.asarray(gt_pc.points), center, scale)
-        mask = np.random.choice(np.arange(len(points)), sample_n, False)
-        return points[mask], np.asarray(gt_pc.points)[mask]
-    else:  # mesh
-        return load_shape(path, in_pointcloud, normalize, sample_n)
-
 
 def load_and_sample_shape(model_name: str, src_dir: str, sample_n=1e5, rescale_f=None):
     """load and sample shape with normalization options"""

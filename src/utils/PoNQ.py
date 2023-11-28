@@ -4,7 +4,7 @@ import numpy as np
 import trimesh
 import torch_scatter
 from pytorch3d.ops import knn_points
-from src.utils.PoNQ_to_mesh import MeshFromPoNQ
+from utils.PoNQ_to_mesh import MeshFromPoNQ
 
 ### utilities
 
