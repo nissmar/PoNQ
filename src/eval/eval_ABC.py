@@ -3,28 +3,12 @@ import joblib
 import argparse
 from eval_Template import get_cd_f1_nc
 
-# pred_dir = "/home/../data/nmaruani/ABCTEST_64_GT/"
-# grid_size = 32
-# pred_dir = "/data/nmaruani/RESULTS/Quadrics/ABC_knn/"
-# pred_dir = "/data/nmaruani/RESULTS/VoroMesh/FINAL/samples/ABC_32+64_32/"
-# pred_dir = "/data/nmaruani/RESULTS/Quadrics/ABC_semi_plane_fine_32/"
-
-
 gt_dir = "/data/nmaruani/DATASETS/ABC/"
-all_models = "learning/dataset/abc_ordered.txt"
-nw_list = 'learning/dataset/not_watertight_ABC_test.txt'
-
-
-# def eval_normalization(x, grid_size=64):
-#     return x/grid_size - .5
-
+all_models = "src/eval/abc_ordered.txt"
+nw_list = 'src/eval/not_watertight_ABC_test.txt'
 
 def eval_normalization(x):
     return x/2.
-
-# def eval_normalization(x):
-#     return x
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -64,7 +48,7 @@ if __name__ == '__main__':
         save_name = save_name[-1]
     else:
         save_name = save_name[-2]
-    np.save('eval/results/results_{}.npy'.format(save_name), out)
+    np.save('src/eval/results/results_{}.npy'.format(save_name), out)
 
     mean_scores = out.mean(0)
     print('CD (x 1e-5), F1, NC, ECD, EF1')
