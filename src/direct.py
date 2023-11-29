@@ -12,8 +12,6 @@ from pytorch3d.ops import knn_points
 from pytorch3d.loss import chamfer_distance
 
 
-
-
 def initialize_model(n_points, device, input_pc=None, grid_n=0):
     '''uniform in [-.5, .5]^3 or farthest point sampling'''
     if grid_n != 0:

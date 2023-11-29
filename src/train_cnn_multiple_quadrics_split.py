@@ -1,17 +1,12 @@
 import torch
 import argparse
 import yaml
-from dataset.ABC_multiple import ABCDataset_multiple
-from networks.SDF_CNN import CNN_3d_multiple_split
+from utils.ABC_dataset import ABCDataset_multiple
+from utils.SDF_CNN import CNN_3d_multiple_split
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import numpy as np
 from pytorch3d.ops import knn_points, knn_gather
-if True:
-    import sys
-    sys.path.insert(1, '../utils/')
-    import neural_quadrics as nq
-    from quadric_meshing import quadrics_score
 
 BCE = torch.nn.BCELoss()
 
@@ -56,7 +51,7 @@ def train_single(p_points, p_vstars, p_normals, p_As, p_bool, gt_points, gt_norm
 
 def train(M, optimizer, train_loader, losses_weights, device='cuda'):
     loss_items = []
-    for (sdfs, mask, samples, samples_n, gt_mask, names) in train_loader:
+    for (sdfs, mask, samples, samples_n, gt_mask, _) in train_loader:
         optimizer.zero_grad()
         loss = 0
         loss_t = 0
@@ -108,8 +103,6 @@ if __name__ == '__main__':
     else:
         M = CNN_3d_multiple_split(
             cfg['data']['grid_n'], K=cfg['training']['K'], ef_dim=128).to(device)
-        # M = CNN_3d_multiple_quadrics_batchnorm(
-        #     cfg['data']['grid_n'], K=cfg['training']['K']).to(device)
     M.train()
     global optimizer
     optimizer = torch.optim.AdamW(M.parameters(), cfg['training']['lr'], weight_decay=cfg['training']['wd'], betas=(

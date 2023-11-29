@@ -46,7 +46,6 @@ class SDF_decoder(nn.Module):
             x.shape[0], (self.grid_n-1)**3, self.K, self.out_features)/self.scale
 
 
-
 class CNN_3d_multiple_split(QuadricBaseNN):
     def __init__(self, grid_n=33, encoder_layers=5, decoder_layers=3, K=4, ef_dim=128, device="cuda"):
         super().__init__()

@@ -2,18 +2,12 @@ import numpy as np
 import trimesh
 from sklearn.neighbors import KDTree
 
-# ef1_radius = 0.004
-# ef1_dotproduct_threshold = 0.2
-# ef1_threshold = 0.005
 sample_num = 100000
 
 f1_threshold = 0.003
-# ef1_radius = 0.01
-# ef1_dotproduct_threshold = 0.1
 e_angle_treshold = 30
 e_sampling_N = int(1e5)
 ef1_threshold = 0.005
-# ef1_threshold = 0.01
 
 
 def uniform_edge_sampling(mesh, angle_treshold, N_sampling):

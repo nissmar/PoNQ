@@ -6,7 +6,8 @@ import torch_scatter
 from pytorch3d.ops import knn_points
 from PoNQ_to_mesh import MeshFromPoNQ
 
-### utilities
+# utilities
+
 
 def vstars_from_quadrics(Q, P, eps=.05):
     """Compute optimal vertices positions
@@ -17,7 +18,7 @@ def vstars_from_quadrics(Q, P, eps=.05):
         Nx4x4 of quadric matrices
     P: torch.tensor 
         Nx3 tensor of positions
-    
+
     Returns
     -------
     vstars: torch.tensor 
@@ -54,7 +55,7 @@ def cluster_samples_quadrics(predicted_points, samples, normals):
         PxNx3 positions of input pointcloud 
     normals: torch.tensor 
         PxNx3 normals of input pointcloud 
-    
+
     Returns
     -------
     mean_quadrics: torch.tensor 
@@ -157,8 +158,9 @@ class PoNQ(nn.Module):
         return ((points[:, None, :] - centroids[None, ...]) ** 2).sum(-1)
 
     def cluster_samples_quadrics_normals(self, samples, normals, assign=True):
-        target_quadrics, mean_normals, count = cluster_samples_quadrics(self.points[None, :], samples[None, :], normals[None, :])
-        non_void = count[0]>0
+        target_quadrics, mean_normals, count = cluster_samples_quadrics(
+            self.points[None, :], samples[None, :], normals[None, :])
+        non_void = count[0] > 0
         target_quadrics = target_quadrics[0]
         mean_normals = mean_normals[0]
 
@@ -181,7 +183,7 @@ class PoNQ(nn.Module):
     # mesh extraction
     def min_cut_surface(self, grid_scale, eps=.05, return_scores=False, correct_tet_color=True, open_treshold=None, return_indices=False, add_noise=False):
         vstars, _, eigs = self.get_vstars(eps)
-        if add_noise: # for precision issues
+        if add_noise:  # for precision issues
             vstars += (torch.rand_like(vstars)-.5)*1e-7
         SC = MeshFromPoNQ(vstars, eigs, self.get_quadric_matrices()[
             self.non_void], self.mean_normals[self.non_void],
@@ -253,67 +255,3 @@ class QuadricBaseNN(nn.Module):
             (*L_flat.shape[:-1], 3, 3), device=L_flat.device)
         L[..., self.indices3x3[0], self.indices3x3[1]] = L_flat
         return torch.matmul(L, L.transpose(-2, -1))
-
-    # def cluster_samples_quadrics(self, predicted_points, samples, normals):
-    #     """ Compute mean statistics in the voronoi region of predicted_points
-    #     returns target_As, target_mean_normals, target_vstars, mask_exists (to apply to target_vstars)"""
-    #     closest_idx = knn_points(
-    #         samples, predicted_points).idx.squeeze(-1)  # k=1
-
-    #     # Compute mean quadrics in the voronoi
-    #     ds = -(normals * samples).sum(-1)
-    #     ps = torch.cat((normals, ds[..., None]), -1)
-    #     quadrics = (torch.matmul(ps[:, :, :, None], ps[:, :, None, :]))
-    #     quadrics = quadrics.reshape(
-    #         samples.shape[0], samples.shape[1], 16
-    #     )
-    #     target_quadrics = torch_scatter.scatter_mean(
-    #         quadrics,
-    #         closest_idx.unsqueeze(2).repeat(1, 1, 16),
-    #         1,
-    #         torch.zeros(
-    #             (predicted_points.shape[0], predicted_points.shape[1], 16), device=predicted_points.device),
-    #     )
-    #     target_quadrics = target_quadrics.reshape(
-    #         predicted_points.shape[0], predicted_points.shape[1], 4, 4)
-
-    #     # Compute mean normals
-    #     mean_normals = torch_scatter.scatter_mean(
-    #         normals,
-    #         closest_idx.unsqueeze(2).repeat(1, 1, 3),
-    #         1,
-    #         torch.zeros(
-    #             (predicted_points.shape[0], predicted_points.shape[1], 3), device=predicted_points.device),
-    #     )
-
-    #     non_void = (mean_normals**2).sum(-1) > 0
-
-    #     target_As = target_quadrics[:, :, :3, :3]
-    #     target_vstars, _, _ = vstars_from_quadrics(
-    #         target_quadrics[non_void], predicted_points[non_void])
-    #     return target_As, mean_normals, target_vstars, non_void
-
-    # def quadric_ellipse_mesh(self, predicted_vstars, predicted_As, size=0.02, subdivisions=1, lambd=1):
-    #     # Draw mesh in quadric ellipse form
-    #     vs = []
-    #     fs = []
-    #     cs = []
-
-    #     _, eigs, vhs = torch.linalg.svd(predicted_As)
-    #     sphere = trimesh.creation.icosphere(subdivisions=subdivisions)
-    #     mv = np.array(sphere.vertices)
-    #     mf = np.array(sphere.faces)
-    #     for vstar, eig, vh in zip(
-    #         predicted_vstars.cpu().detach().numpy(),
-    #         eigs.cpu().detach().numpy(),
-    #         vhs.cpu().detach().numpy(),
-    #     ):
-    #         if eig[0] > 0:
-    #             eig /= np.sqrt((eig**2).sum(-1))
-    #             trans = size * ((mv @ vh) * np.exp(-lambd * eig)) @ vh + vstar
-    #             if len(trans) != len(mv):
-    #                 print("err")
-    #             fs.append(mf + len(mv) * len(vs))
-    #             vs.append(trans)
-    #             cs.append(np.ones(len(mv)) * (eig[0]))
-    #     return np.concatenate(vs), np.concatenate(fs), np.concatenate(cs)

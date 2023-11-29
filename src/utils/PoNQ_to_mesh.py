@@ -17,6 +17,7 @@ def face_orientation(p1, p2, p3, vp1):
 
 class MeshFromPoNQ(Delaunay):
     '''Mesh from PoNQ'''
+
     def __init__(self, vstars: torch.tensor, eigs: torch.tensor, quadrics: torch.tensor, normals: torch.tensor, add_corners=True, compute_mincut=True, grid_scale=32, correct_tet_color=True, **kwargs) -> None:
         self.add_corners = add_corners
         if self.add_corners:
@@ -42,14 +43,14 @@ class MeshFromPoNQ(Delaunay):
             1).cpu().detach().numpy()
         self.triangle_areas = np.sqrt((np.cross(
             self.points[self.triangle_faces[:, 1]] - self.points[self.triangle_faces[:, 0]], self.points[self.triangle_faces[:, 2]] - self.points[self.triangle_faces[:, 0]])**2).sum(-1))
-        self.tet_colors = self.get_init_tet_color() # circumcenter criterion
+        self.tet_colors = self.get_init_tet_color()  # circumcenter criterion
         if correct_tet_color:
-            self.correct_tet_color() # barycenter criterion
-        self.add_void_vertices() # add small tets around unmarked vertices
+            self.correct_tet_color()  # barycenter criterion
+        self.add_void_vertices()  # add small tets around unmarked vertices
         self.final_scores = self.get_faces_score(
             self.triangle_faces)*grid_scale**2 + (self.get_face_normal_align()/1.5)**2
         if compute_mincut:
-            self.min_cut() # min cut surface
+            self.min_cut()  # min cut surface
 
     def get_triangle_faces(self):
         opp_face = [[1, 2, 3], [0, 2, 3], [0, 1, 3], [0, 1, 2]]

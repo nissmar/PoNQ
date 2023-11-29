@@ -10,10 +10,12 @@ import mesh_tools as mt
 from SDF_CNN import CNN_3d_multiple_split
 from CNN_to_PoNQ_or_lite import CNN_to_PoNQ
 
+
 def export_min_cut(name, grid_scale, add_noise=False):
     V = torch.load(name, map_location='cpu')
     try:
-        mt.export_obj(*V.min_cut_surface(grid_scale, add_noise=add_noise), name[:-3])
+        mt.export_obj(*V.min_cut_surface(grid_scale,
+                      add_noise=add_noise), name[:-3])
     except:
         mt.export_obj(np.array([]), np.array([]), name[:-3])
 
@@ -49,12 +51,12 @@ if __name__ == '__main__':
                 val_names = [e + ".hdf5" for e in val_names]
         else:
             raise ("Wrong dataset, must be ABC or Thingi")
-        
+
         save_dir = '/data/nmaruani/RESULTS/Quadrics/{}_{}_{}/'.format(
             args.dataset, cfg["training"]["model_name"][5:-3], args.grid_n-1)
-        if args.subd==1:
+        if args.subd == 1:
             save_dir = save_dir[:-1] + '_lite/'
-        elif args.subd>1:
+        elif args.subd > 1:
             save_dir = save_dir[:-1] + '_lite_{}/'.format(args.subd)
 
         print("Saving models in {}".format(save_dir))
@@ -64,7 +66,8 @@ if __name__ == '__main__':
             print('WARNING: overwriting files')
 
         M = CNN_3d_multiple_split(device=device)
-        M.load_state_dict(torch.load(cfg["training"]["model_name"], map_location=device))
+        M.load_state_dict(torch.load(
+            cfg["training"]["model_name"], map_location=device))
         M.to(device)
         M.eval()
 
@@ -81,4 +84,4 @@ if __name__ == '__main__':
                     V, '{}/{}.pt'.format(save_dir, name[0][:-5]))
         names = [save_dir+e for e in os.listdir(save_dir) if '.pt' in e]
         out = joblib.Parallel(
-            n_jobs=args.n_jobs)(joblib.delayed(export_min_cut)(name, (args.grid_n-1)/2**args.subd, add_noise=args.subd>0) for name in tqdm(names))
+            n_jobs=args.n_jobs)(joblib.delayed(export_min_cut)(name, (args.grid_n-1)/2**args.subd, add_noise=args.subd > 0) for name in tqdm(names))

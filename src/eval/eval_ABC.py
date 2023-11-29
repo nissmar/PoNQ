@@ -7,8 +7,10 @@ gt_dir = "/data/nmaruani/DATASETS/ABC/"
 all_models = "src/eval/abc_ordered.txt"
 nw_list = 'src/eval/not_watertight_ABC_test.txt'
 
+
 def eval_normalization(x):
     return x/2.
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(

@@ -20,6 +20,8 @@ def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 # Mesh operations
+
+
 def NDCnormalize(vertices, return_scale=False):
     """normalization in half unit ball"""
     vM = vertices.max(0)
@@ -164,6 +166,7 @@ def load_shape(path, normalize='NDC', sample_n=None):
     input_points = np.array(samples)
     input_normals = np.array(ref_mesh.face_normals[face_index])
     return input_points, input_normals
+
 
 def load_and_sample_shape(model_name: str, src_dir: str, sample_n=1e5, rescale_f=None):
     """load and sample shape with normalization options"""

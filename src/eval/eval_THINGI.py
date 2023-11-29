@@ -3,8 +3,10 @@ import joblib
 import argparse
 from eval_Template import get_cd_f1_nc
 
+
 def eval_normalization(x):
     return x/2.
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -12,9 +14,9 @@ if __name__ == '__main__':
     parser.add_argument('pred_dir', type=str, help='Path to shape folder.')
     parser.add_argument('-pred_suffix', default=".obj",
                         type=str, help='Path to shape folder.')
-    parser.add_argument('-gt_dir', default= "/data/nmaruani/DATASETS/Thingi32_normalized/",
+    parser.add_argument('-gt_dir', default="/data/nmaruani/DATASETS/Thingi32_normalized/",
                         type=str, help='Path to groundtruth shapes.')
-    parser.add_argument('-all_models', default = "src/eval/watertight_thingi32_obj_list.txt",
+    parser.add_argument('-all_models', default="src/eval/watertight_thingi32_obj_list.txt",
                         type=str, help='Names of valid shapes.')
     args = parser.parse_args()
     pred_dir = args.pred_dir
