@@ -179,8 +179,10 @@ class PoNQ(nn.Module):
         return vstars_from_quadrics(Q, P, eps)
 
     # mesh extraction
-    def min_cut_surface(self, grid_scale, eps=.05, return_scores=False, correct_tet_color=True, open_treshold=None, return_indices=False):
+    def min_cut_surface(self, grid_scale, eps=.05, return_scores=False, correct_tet_color=True, open_treshold=None, return_indices=False, add_noise=False):
         vstars, _, eigs = self.get_vstars(eps)
+        if add_noise: # for precision issues
+            vstars += (torch.rand_like(vstars)-.5)*1e-7
         SC = MeshFromPoNQ(vstars, eigs, self.get_quadric_matrices()[
             self.non_void], self.mean_normals[self.non_void],
             grid_scale=grid_scale,

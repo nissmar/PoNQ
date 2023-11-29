@@ -10,10 +10,10 @@ import mesh_tools as mt
 from SDF_CNN import CNN_3d_multiple_split
 from CNN_to_PoNQ_or_lite import CNN_to_PoNQ
 
-def export_min_cut(name, grid_scale):
+def export_min_cut(name, grid_scale, add_noise=False):
     V = torch.load(name, map_location='cpu')
     try:
-        mt.export_obj(*V.min_cut_surface(grid_scale), name[:-3])
+        mt.export_obj(*V.min_cut_surface(grid_scale, add_noise=add_noise), name[:-3])
     except:
         mt.export_obj(np.array([]), np.array([]), name[:-3])
 
@@ -81,4 +81,4 @@ if __name__ == '__main__':
                     V, '{}/{}.pt'.format(save_dir, name[0][:-5]))
         names = [save_dir+e for e in os.listdir(save_dir) if '.pt' in e]
         out = joblib.Parallel(
-            n_jobs=args.n_jobs)(joblib.delayed(export_min_cut)(name, (args.grid_n-1)/2**args.subd) for name in tqdm(names))
+            n_jobs=args.n_jobs)(joblib.delayed(export_min_cut)(name, (args.grid_n-1)/2**args.subd, add_noise=args.subd>0) for name in tqdm(names))

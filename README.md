@@ -39,8 +39,21 @@ python train_cnn.py ../configs/abc_cnn.yaml
 
 ### Evaluation
 
+## PoNQ
 ```
 python src/generate_all_CNN.py configs/eval_cnn.yaml
 ```
 
+```
+python src/eval/eval_all.py configs/eval_cnn.yaml
+```
 
+## PoNQ-lite
+
+```
+python src/generate_all_CNN.py configs/eval_cnn.yaml -subd 1
+```
+
+```
+python src/eval/eval_all.py configs/eval_cnn.yaml -subd 1
+```
