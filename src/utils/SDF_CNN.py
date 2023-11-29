@@ -1,7 +1,7 @@
 import torch
 from torch import nn
-import utils.mesh_tools as mt
-from utils.PoNQ import QuadricBaseNN
+import mesh_tools as mt
+from PoNQ import QuadricBaseNN
 
 
 class resnet_block(nn.Module):

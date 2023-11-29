@@ -1,5 +1,5 @@
 import torch
-from utils.PoNQ import PoNQ
+from PoNQ import PoNQ
 
 
 def sumpool(tens):
@@ -14,7 +14,6 @@ def CNN_to_PoNQ(model, sdfs, grid_n, mask, subd=0, device="cuda"):
             sdfs.to(device)*(grid_n-1)/32)
         final_mask = (predicted_bool > .5)*mask.to(device)
         if subd == 0:
-
             predicted_quadrics = predicted_quadrics[0,
                                                     final_mask[0]].view(-1, 3, 3)
             predicted_vstars, predicted_mean_normals = predicted_vstars[0, final_mask[0]].view(

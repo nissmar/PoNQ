@@ -1,6 +1,5 @@
 import os
 import igl
-import trimesh
 import argparse
 from tqdm import tqdm
 import numpy as np

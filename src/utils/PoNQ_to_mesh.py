@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.spatial import Delaunay
 import torch
-from utils.mesh_tools import tet_circumcenter, SIGNS
+from mesh_tools import tet_circumcenter, SIGNS
 import networkx as nx
 
 
