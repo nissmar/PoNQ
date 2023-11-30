@@ -1,6 +1,6 @@
 path:
   src_dir: '../data/thingy32/groundtruths/'
-  out_dir: './quadrics_thingi_{}/'
+  out_dir: './out/quadrics_thingi_{}/'
 io:
   normalize: 'NDC'
   out_poisson: True
