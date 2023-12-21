@@ -1,8 +1,8 @@
 import torch
 import argparse
 import yaml
-from utils.ABC_dataset import ABCDataset_multiple
-from utils.SDF_CNN import CNN_3d_multiple_split
+from ABC_dataset import ABCDataset_multiple
+from SDF_CNN import CNN_3d_multiple_split
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import numpy as np
@@ -97,12 +97,11 @@ if __name__ == '__main__':
         dataset, batch_size=cfg['training']['batch_size'], shuffle=True, pin_memory=True)
     print('Loaded {} training shapes'.format(len(dataset)))
 
+    M = CNN_3d_multiple_split(
+        cfg['data']['grid_n'], K=cfg['training']['K'], ef_dim=128).to(device)
     if 'input' in cfg['training']:
         print('Loading pre-trained model {}'.format(cfg['training']['input']))
-        M = torch.load('models/'+cfg['training']['input'])
-    else:
-        M = CNN_3d_multiple_split(
-            cfg['data']['grid_n'], K=cfg['training']['K'], ef_dim=128).to(device)
+        M.load_state_dict(torch.load('models/'+cfg['training']['input'], map_location=device))
     M.train()
     global optimizer
     optimizer = torch.optim.AdamW(M.parameters(), cfg['training']['lr'], weight_decay=cfg['training']['wd'], betas=(
@@ -121,9 +120,9 @@ if __name__ == '__main__':
             labels = ['chamfer', 'vstars', 'loss_normals',
                       'loss_quadrics', 'loss_bools']
             for i in range(5):
-                plt.plot(losses[:, i], label=labels[i])
+                plt.plot(losses[:, 4-i], label=labels[4-i])
             plt.legend()
             plt.yscale('log')
             plt.legend()
             plt.savefig('loss.png', bbox_inches='tight')
-            torch.save(M, 'model.pt')
+            torch.save(M.state_dict(), 'model.pt')

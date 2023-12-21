@@ -20,12 +20,12 @@ if __name__ == '__main__':
         suffix = "_lite_{}".format(args.subd)
 
     os.system(
-        "python src/eval/eval_ABC.py /data/nmaruani/RESULTS/Quadrics/ABC_{}_32{}".format(name, suffix))
+        "python src/eval/eval_ABC.py /data/nmaruani/RESULTS/PoNQ/ABC_{}_32{}".format(name, suffix))
     os.system(
-        "python src/eval/eval_ABC.py /data/nmaruani/RESULTS/Quadrics/ABC_{}_64{}".format(name, suffix))
+        "python src/eval/eval_ABC.py /data/nmaruani/RESULTS/PoNQ/ABC_{}_64{}".format(name, suffix))
     os.system(
-        "python src/eval/eval_THINGI.py /data/nmaruani/RESULTS/Quadrics/Thingi_{}_32{}".format(name, suffix))
+        "python src/eval/eval_THINGI.py /data/nmaruani/RESULTS/PoNQ/Thingi_{}_32{}".format(name, suffix))
     os.system(
-        "python src/eval/eval_THINGI.py /data/nmaruani/RESULTS/Quadrics/Thingi_{}_64{}".format(name, suffix))
+        "python src/eval/eval_THINGI.py /data/nmaruani/RESULTS/PoNQ/Thingi_{}_64{}".format(name, suffix))
     os.system(
-        "python src/eval/eval_THINGI.py /data/nmaruani/RESULTS/Quadrics/Thingi_{}_128{}".format(name, suffix))
+        "python src/eval/eval_THINGI.py /data/nmaruani/RESULTS/PoNQ/Thingi_{}_128{}".format(name, suffix))

@@ -52,7 +52,7 @@ if __name__ == '__main__':
         else:
             raise ("Wrong dataset, must be ABC or Thingi")
 
-        save_dir = '/data/nmaruani/RESULTS/Quadrics/{}_{}_{}/'.format(
+        save_dir = '/data/nmaruani/RESULTS/PoNQ/{}_{}_{}/'.format(
             args.dataset, cfg["training"]["model_name"][5:-3], args.grid_n-1)
         if args.subd == 1:
             save_dir = save_dir[:-1] + '_lite/'

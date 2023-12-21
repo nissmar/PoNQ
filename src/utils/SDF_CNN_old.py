@@ -46,12 +46,13 @@ class SDF_decoder(nn.Module):
             x.shape[0], (self.grid_n-1)**3, self.K, self.out_features)/self.scale
 
 
+
 class CNN_3d_multiple_split(QuadricBaseNN):
     def __init__(self, grid_n=33, encoder_layers=5, decoder_layers=3, K=4, ef_dim=128, device="cuda"):
         super().__init__()
         self.grid_n = grid_n
         self.grid = torch.tensor(mt.mesh_grid(
-            self.grid_n-1, True)*(grid_n-2)/(grid_n-1), dtype=torch.float32).to(device)
+            self.grid_n-1, True)*(grid_n-1)/grid_n, dtype=torch.float32).to(device)
         self.ef_dim = ef_dim
         self.K = K  # number of points
         # convolutions
@@ -70,25 +71,24 @@ class CNN_3d_multiple_split(QuadricBaseNN):
         self.encoder = nn.Sequential(*self.encoder)
 
         self.decoder_points = SDF_decoder(
-            3, scale=grid_n-1, K=K, ef_dim=self.ef_dim, decoder_layers=decoder_layers, grid_n=grid_n)
+            3, scale=grid_n, K=K, ef_dim=self.ef_dim, decoder_layers=decoder_layers, grid_n=grid_n)
         self.decoder_vstars = SDF_decoder(
-            3, scale=grid_n-1, K=K, ef_dim=self.ef_dim, decoder_layers=decoder_layers, grid_n=grid_n)
+            3, scale=grid_n, K=K, ef_dim=self.ef_dim, decoder_layers=decoder_layers, grid_n=grid_n)
         self.decoder_As = SDF_decoder(
             6, scale=1, K=K, ef_dim=self.ef_dim, decoder_layers=decoder_layers, grid_n=grid_n)
         self.decoder_mean_normals = SDF_decoder(
             3, scale=1, K=K, ef_dim=self.ef_dim, decoder_layers=decoder_layers, grid_n=grid_n)
         self.decoder_bools = SDF_decoder(
             1, scale=1, K=1, ef_dim=self.ef_dim, decoder_layers=decoder_layers, grid_n=grid_n)
-        self.change_grid_size(grid_n)
 
     def change_grid_size(self, grid_n):
         self.grid_n = grid_n
         self.grid = torch.tensor(mt.mesh_grid(
-            self.grid_n-1, True)*(grid_n-2)/(grid_n-1), dtype=torch.float32).to(self.grid.device)
+            self.grid_n-1, True)*(grid_n-1)/grid_n, dtype=torch.float32).to(self.grid.device)
         self.decoder_points.grid_n = grid_n
-        self.decoder_points.scale = grid_n-1
+        self.decoder_points.scale = grid_n
         self.decoder_vstars.grid_n = grid_n
-        self.decoder_vstars.scale = grid_n-1
+        self.decoder_vstars.scale = grid_n
         self.decoder_As.grid_n = grid_n
         self.decoder_mean_normals.grid_n = grid_n
         self.decoder_bools.grid_n = grid_n

@@ -13,12 +13,12 @@ def make_mask_close(sdf_input, grid_n):
     return sum_arrays
 
 
-def make_gt_mask(samples: np.ndarray, grid_n: int):
-    """subselects voxels which collide with pointcloud"""
-    samples_low = np.floor((samples + 1) / 2 * grid_n).astype(np.int64)
-    mask = np.zeros((grid_n, grid_n, grid_n))
-    mask[samples_low[:, 0], samples_low[:, 1], samples_low[:, 2]] = 1
-    return mask.reshape((grid_n**3)) > 0
+# def make_gt_mask(samples: np.ndarray, grid_n: int):
+#     """subselects voxels which collide with pointcloud"""
+#     samples_low = np.floor((samples + 1) / 2 * grid_n).astype(np.int64)
+#     mask = np.zeros((grid_n, grid_n, grid_n))
+#     mask[samples_low[:, 0], samples_low[:, 1], samples_low[:, 2]] = 1
+#     return mask.reshape((grid_n**3)) > 0
 
 
 def get_item(src_dir, model_name, grid_n, compute_gt, indices):
@@ -32,7 +32,8 @@ def get_item(src_dir, model_name, grid_n, compute_gt, indices):
     if compute_gt:
         samples = 2 * file["pointcloud"][:][indices]
         samples_normals = file['normals'][:][indices]
-        gt_mask = make_gt_mask(2 * file["pointcloud"][:], grid_n-1)
+        gt_mask = gt_mask = file['{}_mask'.format(
+            grid_n-1)][:]
     else:
         samples = np.array([])
         samples_normals = np.array([])
