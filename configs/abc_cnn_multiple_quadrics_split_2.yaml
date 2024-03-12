@@ -15,7 +15,7 @@ training:
   epochs: 195
   sample_fac: 700000
   K: 4
-  losses_weights: [100, 100, .1, .1, .1]
+  losses_weights: [100, 100, .1, .1, .1, 1]
   supervised: False
   multiple: True
   me: False

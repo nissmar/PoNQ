@@ -5,7 +5,7 @@ data:
   mask_close: True
 training: 
   input: 'model_multiple_quadrics_split_fine.pt'
-  model_name: 'model_multiple_quadrics_split_free.pt'
+  model_name: 'data/model_multiple_quadrics_split_free.pt'
   batch_size: 16
   lr: 0.000032
   wd: 0.01
