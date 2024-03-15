@@ -1,5 +1,5 @@
-import utils.mesh_tools as mt
-from utils.PoNQ import PoNQ
+import mesh_tools as mt
+from PoNQ import PoNQ
 import os
 import yaml
 from time import time

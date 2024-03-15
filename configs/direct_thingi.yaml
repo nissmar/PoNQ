@@ -1,5 +1,5 @@
 path:
-  src_dir: '../data/thingy32/groundtruths/'
+  src_dir: '/data/nmaruani/DATASETS/Thingi32_normalized/'
   out_dir: './out/quadrics_thingi_{}/'
 io:
   normalize: 'NDC'
