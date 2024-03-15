@@ -15,8 +15,9 @@ Please see our [project page](https://nissmar.github.io/projects/ponq) for more 
 Generate meshes on both Thingi32 and ABC for PoNQ and PoNQ-lite with our pre-trained network:
 
 ```
-python src/generate_all_CNN.py configs/eval_cnn.yaml
-python src/generate_all_CNN.py configs/eval_cnn.yaml -subd 1
+mkdir out 
+python src/generate_all_CNN.py configs/eval_cnn.yaml -datasets_path FOLDER
+python src/generate_all_CNN.py configs/eval_cnn.yaml -subd 1 -datasets_path FOLDER
 ```
 
 Compute various metrics (CD, F1, NC, ECD, EF1):

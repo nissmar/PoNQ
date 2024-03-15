@@ -1,3 +1,6 @@
+path:
+  out_dir: 'out/'
+  datasets_path: '/data/nmaruani/DATASETS/'
 data:
   names: 'src/utils/abc_watertight_train.txt'
   hdf5: '/data/nmaruani/DATASETS/gt_Quadrics/'

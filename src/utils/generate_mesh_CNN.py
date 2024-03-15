@@ -39,21 +39,22 @@ if __name__ == '__main__':
 
         if args.dataset == "ABC":
             names = "src/eval/abc_ordered.txt"
-            hdf5 = '/data/nmaruani/DATASETS/gt_Quadrics/'
+            hdf5 = '{}/gt_Quadrics/'.format(cfg['path']['datasets_path'])
             with open(names, "r") as f:
                 val_names = [e[:-1] for e in f.readlines()]
                 val_names = val_names[int(len(val_names)*0.8):]
         elif args.dataset == "Thingi":
             names = "src/eval/watertight_thingi32_obj_list.txt"
-            hdf5 = "/data/nmaruani/DATASETS/gt_Thingi32_NDC_norm/"
+            hdf5 = "{}/gt_Thingi32_NDC_norm/".format(
+                cfg['path']['datasets_path'])
             with open(names, "r") as f:
                 val_names = [e[:-1] for e in f.readlines()]
                 val_names = [e + ".hdf5" for e in val_names]
         else:
             raise ("Wrong dataset, must be ABC or Thingi")
 
-        save_dir = '/data/nmaruani/RESULTS/Quadrics/{}_{}_{}/'.format(
-            args.dataset, cfg["training"]["model_name"][5:-3], args.grid_n-1)
+        save_dir = '{}/{}_{}_{}/'.format(
+            cfg['path']['out_dir'], args.dataset, cfg["training"]["model_name"][5:-3], args.grid_n-1)
         if args.subd == 1:
             save_dir = save_dir[:-1] + '_lite/'
         elif args.subd > 1:

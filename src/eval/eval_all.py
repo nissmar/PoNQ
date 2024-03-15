@@ -6,6 +6,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='compute all metrics')
     parser.add_argument('config', type=str, help='Path to config file.')
+    parser.add_argument('-output_folder', type=str, default='out/', help='Path to test folder')
     parser.add_argument('-subd', type=int, default=0,
                         help='subdivision level.')
     args = parser.parse_args()
@@ -20,12 +21,12 @@ if __name__ == '__main__':
         suffix = "_lite_{}".format(args.subd)
 
     os.system(
-        "python src/eval/eval_ABC.py /data/nmaruani/RESULTS/Quadrics/ABC_{}_32{}".format(name, suffix))
+        "python src/eval/eval_ABC.py {}/ABC_{}_32{}".format(args.output_folder, name, suffix))
     os.system(
-        "python src/eval/eval_ABC.py /data/nmaruani/RESULTS/Quadrics/ABC_{}_64{}".format(name, suffix))
+        "python src/eval/eval_ABC.py {}/ABC_{}_64{}".format(args.output_folder, name, suffix))
     os.system(
-        "python src/eval/eval_THINGI.py /data/nmaruani/RESULTS/Quadrics/Thingi_{}_32{}".format(name, suffix))
+        "python src/eval/eval_THINGI.py {}/Thingi_{}_32{}".format(args.output_folder, name, suffix))
     os.system(
-        "python src/eval/eval_THINGI.py /data/nmaruani/RESULTS/Quadrics/Thingi_{}_64{}".format(name, suffix))
+        "python src/eval/eval_THINGI.py {}/Thingi_{}_64{}".format(args.output_folder, name, suffix))
     os.system(
-        "python src/eval/eval_THINGI.py /data/nmaruani/RESULTS/Quadrics/Thingi_{}_128{}".format(name, suffix))
+        "python src/eval/eval_THINGI.py {}/Thingi_{}_128{}".format(args.output_folder, name, suffix))
