@@ -1,13 +1,14 @@
 
 
-# PoNQ: a Neural QEM-based Mesh Representation
-## CVPR 2024
+# PoNQ: a Neural QEM-based Mesh Representation [CVPR 2024]
 
 [Nissim Maruani](https://nissmar.github.io)<sup>1</sup>, [Maks Ovsjanikov](https://www.lix.polytechnique.fr/~maks/)<sup>2</sup>, [Pierre Alliez](https://team.inria.fr/titane/pierre-alliez/)<sup>1</sup>, [Mathieu Desbrun](https://pages.saclay.inria.fr/mathieu.desbrun/)<sup>3</sup>.
 
 <sup>1</sup> Inria, Université Côte d’Azur &emsp; <sup>2</sup> LIX, École Polytechnique, IP Paris &emsp; <sup>2</sup> Inria Saclay, École Polytechnique
 
 <img src='data/banner.png' />
+
+Please see our [project page](https://nissmar.github.io/projects/ponq) for more results. 
 
 ## Evaluation
 
