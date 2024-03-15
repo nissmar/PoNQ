@@ -16,8 +16,8 @@ Generate meshes on both Thingi32 and ABC for PoNQ and PoNQ-lite with our pre-tra
 
 ```
 mkdir out 
-python src/generate_all_CNN.py configs/eval_cnn.yaml -datasets_path FOLDER
-python src/generate_all_CNN.py configs/eval_cnn.yaml -subd 1 -datasets_path FOLDER
+python src/generate_all_CNN.py configs/eval_cnn.yaml 
+python src/generate_all_CNN.py configs/eval_cnn.yaml -subd 1
 ```
 
 Compute various metrics (CD, F1, NC, ECD, EF1):

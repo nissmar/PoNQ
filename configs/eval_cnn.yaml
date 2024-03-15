@@ -3,7 +3,6 @@ path:
   datasets_path: '/data/nmaruani/DATASETS/'
 data:
   names: 'src/utils/abc_watertight_train.txt'
-  hdf5: '/data/nmaruani/DATASETS/gt_Quadrics/'
   grid_n: 33
   mask_close: True
 training: 
