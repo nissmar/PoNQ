@@ -7,7 +7,7 @@
 
 <sup>1</sup> Inria, Université Côte d’Azur &emsp; <sup>2</sup> LIX, École Polytechnique, IP Paris &emsp; <sup>2</sup> Inria Saclay, École Polytechnique
 
-<img src='data/banner.pdf' />
+<img src='data/banner.png' />
 
 ## Evaluation
 
