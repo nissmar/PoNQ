@@ -83,5 +83,6 @@ if __name__ == '__main__':
                 torch.save(
                     V, '{}/{}.pt'.format(save_dir, name[0][:-5]))
         names = [save_dir+e for e in os.listdir(save_dir) if '.pt' in e]
+        print('Adding noise: ', args.subd > 0)
         out = joblib.Parallel(
             n_jobs=args.n_jobs)(joblib.delayed(export_min_cut)(name, (args.grid_n-1)/2**args.subd, add_noise=args.subd > 0) for name in tqdm(names))
