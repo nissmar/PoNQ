@@ -10,7 +10,9 @@
 
 Please see our [project page](https://nissmar.github.io/projects/ponq) for more results. 
 
+## News
 
+- `2024-03` Accepted at CVPR 2024 🚀🚀🚀
 
 
 ## Requirements
@@ -29,38 +31,39 @@ The code is tested on the listed versions but other versions may also work:
 
 ## Demos
 
-Several demos notebooks are available in `src/utils`
-### `demo_learning`: Iso-surfacing of SDF grids
-Our PoNQ model pre-trained on ABC can be used as an alternative to Marching Cubes on groundtruth Signed Distance Fields (SDF) grids. 
+To interactively test our method, please refer to the notebooks in `src/demos/`.
 
-### `demo_learning_large`: Iso-surfacing of large SDF grids
-Same as above but with a splitting 
+### Iso-surfacing of SDF grids: `demo_learning.ipynb`
+Our PoNQ model pre-trained on ABC can reconstruct 3D meshes from ground truth Signed Distance Fields (SDF) grids: it is an alternative to Marching Cubes. For high resolutions (or small GPUs), the input grid can be split: see `demo_learning_large.ipynb`.
 
-### `TODO`
+### Optimization-based fitting : `demo_optimization.ipynb`
 
-OTHER NOTEBOOKS
+Optimization of a PoNQ model with ground truth points and normals (no learning here). Can be used to compare with SIREN. 
+
+### Optimization-based reconstruction of open models: `demo_boundary.ipynb`
+
+Optimization of a PoNQ model to reconstruct an open shape.
 
 
 ## Evaluation
 
-MESHES: [Meshes](https://drive.google.com/file/d/1zk0mr8Gmx_d-yYFSC9lhMZDwTwvPujEK/view?usp=sharing)
-DATA: [ABC](https://drive.google.com/file/d/1XgHf70Xqxraidhsd3RwXHw7_nifUgVSy/view?usp=sharing) and [Thingi](https://drive.google.com/file/d/1uNYQ7ZuLNqTQJPK7Rs8PiJf7sn5MhqZY/view?usp=sharing)
-Generate meshes on both Thingi32 and ABC for PoNQ and PoNQ-lite with our pre-trained network:
+Note that we provide the generated learning-based PoNQ meshes [here](https://drive.google.com/file/d/1zk0mr8Gmx_d-yYFSC9lhMZDwTwvPujEK/view?usp=sharing). To reproduce our results,  please first download the data for [ABC](https://drive.google.com/file/d/1XgHf70Xqxraidhsd3RwXHw7_nifUgVSy/view?usp=sharing) and [Thingi](https://drive.google.com/file/d/1uNYQ7ZuLNqTQJPK7Rs8PiJf7sn5MhqZY/view?usp=sharing). 
+The following command will generate meshes on both Thingi32 and ABC for PoNQ and PoNQ-lite with our pre-trained network:
 
 ```
 mkdir out 
-python src/generate_all_CNN.py configs/eval_cnn.yaml 
-python src/generate_all_CNN.py configs/eval_cnn.yaml -subd 1
+python src/generate_all_CNN.py configs/eval_cnn.yaml  # PoNQ
+python src/generate_all_CNN.py configs/eval_cnn.yaml -subd 1 # PoNQ-lite
 ```
 
-Compute various metrics (CD, F1, NC, ECD, EF1):
+You can compute various metrics (CD, F1, NC, ECD, EF1) with:
 
 ```
-python src/eval/eval_all.py configs/eval_cnn.yaml
-python src/eval/eval_all.py configs/eval_cnn.yaml -subd 1
+python src/eval/eval_all.py configs/eval_cnn.yaml # PoNQ
+python src/eval/eval_all.py configs/eval_cnn.yaml -subd 1 # PoNQ-lite
 ```
 
-Check watertightness and count mesh elements: 
+You can check watertightness and count mesh elements with: 
 
 ````
 python src/eval/check_watertight.py FOLDER
@@ -69,14 +72,14 @@ python src/eval/check_watertight.py FOLDER
 
 ## Direct Optimization
 
-Direct optimization on Thingi32:
+The following command generates optimization-based PoNQ models on Thingi:
 ````
 python src/utils/direct.py configs/direct_thingi.yaml -grid_n 32
 python src/utils/direct.py configs/direct_thingi.yaml -grid_n 64
 python src/utils/direct.py configs/direct_thingi.yaml -grid_n 128
 ````
 
-Compute various metrics (CD, F1, NC, ECD, EF1):
+You can compute various metrics (CD, F1, NC, ECD, EF1) with:
 
 ````
 python src/eval/eval_THINGI.py FOLDER
@@ -85,15 +88,18 @@ python src/eval/eval_THINGI.py FOLDER
 
 ## Model training
 
+
 ### Data preparation
-Follow the instructions provided by [NMC](https://github.com/czq142857/NMC/tree/main/data_preprocessing) to:
+
+Please follow the instructions provided by [NMC](https://github.com/czq142857/NMC/tree/main/data_preprocessing) to:
 - Download the first chunk of ABC
 - run `simplify_obj.py`
 - compile `SDFGen`
 
-After that, run `get_data.py` to obtain SDF grids, sampled points and sample normals for training
+After that, run `get_data.py` to obtain SDF grids, sampled points and sample normals for training.
+
 ### Training
-Run each one of the training phase, and do not forget to rename `model.pt`between each one.
+Run each one of the training phase, and do not forget to rename `model.pt` between each command.
 
 ```
 cd learning
@@ -102,8 +108,9 @@ python src/utils/train_cnn_multiple_quadrics_split.py configs/abc_cnn_multiple_q
 python src/utils/train_cnn_multiple_quadrics_split.py configs/abc_cnn_multiple_quadrics_split_3.yaml
 ```
 
-## Citation 
-TODO
+<!-- ## Citation 
+TODO -->
 
 ## Acknowledgments 
-TODO
+
+This work was supported by 3IA Côte d'Azur (ANR-19-P3IA-0002), ERC Starting Grant 758800 (EXPROTEA), ERC Consolidator Grant 101087347 (VEGA), ANR AI Chair AIGRETTE, Ansys, Adobe Research, and a Choose France Inria chair.
