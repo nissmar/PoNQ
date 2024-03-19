@@ -198,6 +198,13 @@ def export_ply(ref_mesh: trimesh.Trimesh, model_name: str, target_dir="./"):
     output_file.close()
 
 
+def export_glb(ref_mesh: trimesh.Trimesh, model_name: str):
+    '''support vertex_colors as Nx4 array in [0, 1]'''
+    with open(model_name, 'wb') as f:
+        f.write(trimesh.exchange.gltf.export_glb(ref_mesh))
+        f.close()
+
+
 def export_obj(nv: np.ndarray, nf: np.ndarray, name: str, export_lines=False):
     if name[:-4] != ".obj":
         name += ".obj"

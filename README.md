@@ -8,7 +8,7 @@
 
 <img src='data/banner.png' />
 
-Please see our [project page](https://nissmar.github.io/projects/ponq) for more results. 
+Please see our [project page](https://nissmar.github.io/projects/ponq) for video presentation & 3D meshes. 
 
 ## News
 
@@ -93,13 +93,13 @@ python src/eval/eval_THINGI.py FOLDER
 
 Please follow the instructions provided by [NMC](https://github.com/czq142857/NMC/tree/main/data_preprocessing) to:
 - Download the first chunk of ABC
-- run `simplify_obj.py`
-- compile `SDFGen`
+- Run `simplify_obj.py`
+- Compile `SDFGen`
 
 After that, run `get_data.py` to obtain SDF grids, sampled points and sample normals for training.
 
 ### Training
-Run each one of the training phase, and do not forget to rename `model.pt` between each command.
+Run each one of the training phase, and do not forget to rename `model.pt` between each command:
 
 ```
 cd learning
