@@ -44,7 +44,7 @@ def vstars_from_quadrics(Q, P, eps=.05):
     return vstars, vh, eigs
 
 
-def cluster_samples_quadrics(predicted_points, samples, normals):
+def cluster_samples_quadrics(predicted_points, samples, normals, eps=0):
     """Compute mean statistics in the voronoi region of predicted_points
 
     Parameters
@@ -55,6 +55,8 @@ def cluster_samples_quadrics(predicted_points, samples, normals):
         PxNx3 positions of input pointcloud 
     normals: torch.tensor 
         PxNx3 normals of input pointcloud 
+    eps: float
+        Add small identity matrix as in Probablistic Quadrics
 
     Returns
     -------
@@ -72,6 +74,13 @@ def cluster_samples_quadrics(predicted_points, samples, normals):
     ds = -(normals * samples).sum(-1)
     ps = torch.cat((normals, ds[..., None]), -1)
     quadrics = (torch.matmul(ps[:, :, :, None], ps[:, :, None, :]))
+
+    if eps > 0:
+        quadrics[..., np.arange(3), np.arange(3)] += eps
+        quadrics[..., 3, :3] += -eps*samples
+        quadrics[..., :3, 3] += -eps*samples
+        # TODO: update component
+
     quadrics = quadrics.reshape(
         samples.shape[0], samples.shape[1], 16
     )
@@ -157,9 +166,9 @@ class PoNQ(nn.Module):
     def distance_to_centroids(self, points, centroids):
         return ((points[:, None, :] - centroids[None, ...]) ** 2).sum(-1)
 
-    def cluster_samples_quadrics_normals(self, samples, normals, assign=True):
+    def cluster_samples_quadrics_normals(self, samples, normals, assign=True, eps=0):
         target_quadrics, mean_normals, count = cluster_samples_quadrics(
-            self.points[None, :], samples[None, :], normals[None, :])
+            self.points[None, :], samples[None, :], normals[None, :], eps)
         non_void = count[0] > 0
         target_quadrics = target_quadrics[0]
         mean_normals = mean_normals[0]
