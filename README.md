@@ -63,11 +63,18 @@ python src/eval/eval_all.py configs/eval_cnn.yaml # PoNQ
 python src/eval/eval_all.py configs/eval_cnn.yaml -subd 1 # PoNQ-lite
 ```
 
-You can check watertightness and count mesh elements with: 
+To check watertightness and count mesh elements, either use the compiled `self_intersect` or compile it yourself (make sure you have CGAL installed):
 
-````
+```
+cd src/eval/cpp_utils/build
+rm self_intersect
+cmake ../ # MAKE SURE YOU HAVE CGAL
+make
+```
+Then run
+```
 python src/eval/check_watertight.py FOLDER
-````
+```
 
 
 ## Direct Optimization
